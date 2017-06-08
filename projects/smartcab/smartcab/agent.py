@@ -119,7 +119,7 @@ class LearningAgent(Agent):
                 #Create a list of all possible actions with max Q-Score and pick a random choice within this list
                 maxQ = []
                 for action in self.valid_actions:
-                    if self.Q[state][action] == self.get_maxQ[state]:
+                    if self.Q[state][action] == self.get_maxQ(state):
                         maxQ.append(action)                             
                 action = random.choice(maxQ)
         else:
