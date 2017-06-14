@@ -13135,7 +13135,7 @@ ZmZmViNOsMzMzMzMzGrECZaZmZmZmVmN/D9HANGx7f7SWQAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong><br>
-The most relevant for learning <strong>BOTH</strong> safety and efficiency should be the waypoint and the inputs. The waypoint determines the current state in comparison with the destination and makes the approproate series of actions to get to the end state. This assumes no traffic condition to hinder the Smartcab to move to the destination in the shortest path. The inputs provides the traffic conditions which should be compared and considered to avoid accident and traffic violation. This is important to ensure safety and re-adjust to make the most efficient route for the journey. Deadline is important for efficiency but does not contribute to safety as such this has been omitted in the feature list.</p>
+The most relevant for learning <strong>BOTH</strong> safety and efficiency should be the waypoint and the inputs. The waypoint determines the current state in comparison with the destination and makes the approproate series of actions to get to the end state. This assumes no traffic condition to hinder the Smartcab to move to the destination in the shortest path. The inputs provides the traffic conditions which should be compared and considered to avoid accident and traffic violation. This is important to ensure safety and re-adjust to make the most efficient route for the journey. Deadline is important for efficiency but does not contribute to safety as such this has been omitted in the feature list. In addition, the number of actions depends on the start and destination location set in environment.py (&gt;4). This implies a significant large feature size to consider when computing the Q-table. As such, the learning algorithm might become flawed with random selection among all the actions with Q-score of 0.0 if the agent is not adequately trained.</p>
 
 </div>
 </div>
@@ -13168,20 +13168,14 @@ The most relevant for learning <strong>BOTH</strong> safety and efficiency shoul
 <p><strong>Answer:</strong><br>
 If we calculate the possible outcomes for the features identified in Question 4, <br></p>
 <ul>
-<li>waypoints - 4 (Forward, Left, Right, None)</li>
+<li>waypoints - 3 (Forward, Left, Right)</li>
 <li>Light - 2 (Red, Green)</li>
 <li>Left Vehicle Moves - 4 (Forward, Left, Right, None)</li>
 <li>Right Vehicle Moves - 4 (Forward, Left, Right, None)</li>
 <li>Oncoming Vehicle Moves - 4 (Forward, Left, Right, None)</li>
 </ul>
-<p>There is a total size of 512 states (4*2*4*4*4) in the space. However, it is assumed that the dummy traffic will follow the traffic rules (e.g. If light at self driven car is green, it should assume red light for the left vehicle. There should only be 2 legal moves - None or Right).<br>
-<br>
-By eliminating all illegal move and also taking into account of the Smartcab is in destination (i.e. waypoint = none),<br>
-Light is red - 4 (Left Vehicle) * 4 (Right Vehicle) * 2 (Oncoming Vehicle) - Sub-total: 32<br>
-Light is green - 2 (Left Vehicle) * 2 (Right Vehicle) * 4 (Oncoming Vehicle) - Sub-total:16<br>
-Total = 1 + (32+16)*3 = 145 states<br>
-<br>
-Given that the deadline is a function of distance * 5, it might also be possible to eliminate for not considering a waypoint move (e.g. no turning left at all situation). That can ignore 48 possible states for consideration.</p>
+<p>There is a total size of 384 states (3*2*4*4*4) in the space.<br></p>
+<p>Based on sim_no-learning.csv, there are approximately 25 actions per trial and there are 20 learning trial making a total of 500 actions steps that can be added into the Q-table. It is in the same magnitude as the total number of states. With appropriate adjustment of epsilon and update_delay value, the agent can learn a policy for each possible state at a reasonable timeframe.</p>
 
 </div>
 </div>
@@ -16714,7 +16708,7 @@ The optimal policy should be to turn <strong>right</strong> since there is no ob
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong>
-The discount factor, 'gamma', would take into account the future state and action. For the future state (i.e. the environment), this is dynamic subject to the traffic conditions once the smartcab reaches that state. Maximising the Q-value would possibly be finding the highest Q-score among all options within a specific waypoint but, by doing so, the chosen option would not necessary reflect the actual traffic condition. As observed in Question 8, the smartcab might take action that is counter-intuitive to the waypoint. If we force the smartcab to follow a direction (e.g. the waypoint), we might end up with sub-optimal learning or might even be negatively impacting the Q-value update in the Q-table.</p>
+The discount factor, 'gamma', would take into account and anticipate the future state and action. However, the agent is only provided with the current state and the waypoint to the destination. It does not have a full view of all the intersections within the grid to determine the best route from start to destination. In addition, the destination location changes after each trial leading to an infinity number of possible route from point A to B making it impossible to learn from future rewards in this project.</p>
 
 </div>
 </div>
